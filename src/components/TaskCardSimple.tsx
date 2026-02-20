@@ -82,7 +82,7 @@ export default function TaskCardSimple({ task }: TaskCardProps) {
       
       {/* 更新时间 */}
       <div className="text-xs text-gray-400 mt-2" suppressHydrationWarning>
-        更新于 {task.updatedAt.toLocaleTimeString('zh-CN', { 
+        更新于 {new Date(task.updatedAt).toLocaleTimeString('zh-CN', { 
           hour: '2-digit', 
           minute: '2-digit' 
         })}

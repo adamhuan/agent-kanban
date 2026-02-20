@@ -39,8 +39,8 @@ export const initialTasks: Task[] = [
     status: 'done',
     agentId: 'agent-1',
     agentName: '龙虾机器人 🦞',
-    createdAt: new Date('2026-02-20T10:00:00'),
-    updatedAt: new Date('2026-02-20T18:30:00'),
+    createdAt: '2026-02-20T10:00:00Z',
+    updatedAt: '2026-02-20T18:30:00Z',
     priority: 'high',
     tags: ['devops', 'docker', 'kubernetes', 'ansible'],
     progress: 100,
@@ -54,8 +54,8 @@ export const initialTasks: Task[] = [
     status: 'in_progress',
     agentId: 'agent-3',
     agentName: '运维专家 🛠️',
-    createdAt: new Date('2026-02-20T14:00:00'),
-    updatedAt: new Date('2026-02-20T21:15:00'),
+    createdAt: '2026-02-20T14:00:00Z',
+    updatedAt: '2026-02-20T21:15:00Z',
     priority: 'medium',
     tags: ['monitoring', 'prometheus', 'grafana'],
     progress: 65,
@@ -69,8 +69,8 @@ export const initialTasks: Task[] = [
     status: 'in_progress',
     agentId: 'agent-1',
     agentName: '龙虾机器人 🦞',
-    createdAt: new Date('2026-02-20T21:10:00'),
-    updatedAt: new Date('2026-02-20T22:10:00'),
+    createdAt: '2026-02-20T21:10:00Z',
+    updatedAt: '2026-02-20T22:10:00Z',
     priority: 'critical',
     tags: ['nextjs', 'react', 'typescript', 'tailwind'],
     progress: 40,
@@ -84,8 +84,8 @@ export const initialTasks: Task[] = [
     status: 'todo',
     agentId: 'agent-2',
     agentName: '代码助手 🤖',
-    createdAt: new Date('2026-02-20T16:00:00'),
-    updatedAt: new Date('2026-02-20T16:00:00'),
+    createdAt: '2026-02-20T16:00:00Z',
+    updatedAt: '2026-02-20T16:00:00Z',
     priority: 'medium',
     tags: ['api', 'documentation', 'swagger'],
     progress: 0,
@@ -98,8 +98,8 @@ export const initialTasks: Task[] = [
     status: 'in_progress',
     agentId: 'agent-2',
     agentName: '代码助手 🤖',
-    createdAt: new Date('2026-02-20T09:00:00'),
-    updatedAt: new Date('2026-02-20T20:45:00'),
+    createdAt: '2026-02-20T09:00:00Z',
+    updatedAt: '2026-02-20T20:45:00Z',
     priority: 'high',
     tags: ['database', 'postgresql', 'performance'],
     progress: 80,
@@ -113,8 +113,8 @@ export const initialTasks: Task[] = [
     status: 'todo',
     agentId: 'agent-3',
     agentName: '运维专家 🛠️',
-    createdAt: new Date('2026-02-21T08:00:00'),
-    updatedAt: new Date('2026-02-21T08:00:00'),
+    createdAt: '2026-02-21T08:00:00Z',
+    updatedAt: '2026-02-21T08:00:00Z',
     priority: 'medium',
     tags: ['logging', 'elk', 'elasticsearch'],
     progress: 0,
@@ -127,8 +127,8 @@ export const initialTasks: Task[] = [
     status: 'todo',
     agentId: 'agent-4',
     agentName: '数据分析师 📊',
-    createdAt: new Date('2026-02-21T10:00:00'),
-    updatedAt: new Date('2026-02-21T10:00:00'),
+    createdAt: '2026-02-21T10:00:00Z',
+    updatedAt: '2026-02-21T10:00:00Z',
     priority: 'low',
     tags: ['ml', 'ai', 'python'],
     progress: 0,
@@ -141,8 +141,8 @@ export const initialTasks: Task[] = [
     status: 'done',
     agentId: 'agent-1',
     agentName: '龙虾机器人 🦞',
-    createdAt: new Date('2026-02-19T09:00:00'),
-    updatedAt: new Date('2026-02-19T17:30:00'),
+    createdAt: '2026-02-19T09:00:00Z',
+    updatedAt: '2026-02-19T17:30:00Z',
     priority: 'high',
     tags: ['ci-cd', 'jenkins', 'gitlab'],
     progress: 100,
@@ -190,7 +190,7 @@ export function subscribeToUpdates(callback: (tasks: Task[]) => void) {
       }
     }
     
-    task.updatedAt = new Date();
+    task.updatedAt = new Date().toISOString();
     callback(updatedTasks);
   }, 30000);
 
@@ -201,7 +201,7 @@ export function updateTaskStatus(taskId: string, newStatus: TaskStatus) {
   const task = initialTasks.find(t => t.id === taskId);
   if (task) {
     task.status = newStatus;
-    task.updatedAt = new Date();
+    task.updatedAt = new Date().toISOString();
     
     if (newStatus === 'in_progress' && !task.progress) {
       task.progress = 10;
