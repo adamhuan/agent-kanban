@@ -3,11 +3,44 @@
 import { useState } from 'react';
 import { Task, KanbanColumn as ColumnType } from '@/types';
 import TaskCardSimple from './TaskCardSimple';
-import { ChevronDown, ChevronUp, Hash, Globe, Clock, MessageSquare } from 'lucide-react';
+import { ChevronDown, ChevronUp, Hash, Globe, Clock, MessageSquare, HelpCircle } from 'lucide-react';
 
 interface KanbanColumnProps {
   column: ColumnType;
 }
+
+// 状态说明配置
+const statusHelpInfo: { [key: string]: { title: string; description: string; rules?: string[] } } = {
+  todo: {
+    title: '待办任务',
+    description: '等待处理的任务',
+    rules: ['新创建的任务默认进入此列'],
+  },
+  in_progress: {
+    title: '进行中任务',
+    description: 'Agent 正在处理的任务',
+    rules: [
+      '5 分钟内活跃的任务',
+      'Agent 在线时正在执行',
+    ],
+  },
+  done: {
+    title: '已完成任务',
+    description: '已经完成的任务',
+    rules: [
+      'Agent 会话正常结束',
+      '任务目标已达成',
+    ],
+  },
+  offline: {
+    title: '已离线任务',
+    description: 'Agent 暂时离线的任务',
+    rules: [
+      '30 分钟以上未活跃自动转入',
+      'Agent 重新在线后可恢复为进行中',
+    ],
+  },
+};
 
 // 与 AgentStatus 组件保持一致的分组逻辑
 function groupTasksByChannel(tasks: Task[]) {
@@ -92,8 +125,10 @@ function getChannelColor(key: string): string {
 
 export default function KanbanColumnSimple({ column }: KanbanColumnProps) {
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set(['discord', 'webchat']));
+  const [showHelp, setShowHelp] = useState(false);
   
   const groupedTasks = groupTasksByChannel(column.tasks);
+  const helpInfo = statusHelpInfo[column.id] || { title: '未知状态', description: '', rules: [] };
   
   const toggleGroup = (key: string) => {
     const newExpanded = new Set(expandedGroups);
@@ -144,6 +179,56 @@ export default function KanbanColumnSimple({ column }: KanbanColumnProps) {
           <span className={`ml-2 px-2.5 py-1 rounded-full text-xs font-semibold ${getHeaderColor()}`}>
             {column.tasks.length}
           </span>
+        </div>
+        
+        {/* 帮助信息图标 */}
+        <div 
+          className="relative"
+          onMouseEnter={() => setShowHelp(true)}
+          onMouseLeave={() => setShowHelp(false)}
+        >
+          <button 
+            className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+            aria-label="帮助信息"
+          >
+            <HelpCircle className="w-5 h-5" />
+          </button>
+          
+          {/* 悬停提示框 */}
+          {showHelp && (
+            <div className="absolute right-0 top-full mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-200 p-4 z-50 animate-in fade-in duration-200">
+              <div className="flex items-center mb-2">
+                <div className={`w-2 h-2 rounded-full mr-2 ${
+                  column.id === 'todo' ? 'bg-gray-400' :
+                  column.id === 'in_progress' ? 'bg-blue-500' :
+                  column.id === 'done' ? 'bg-green-500' :
+                  'bg-gray-500'
+                }`} />
+                <h3 className="font-semibold text-gray-800">{helpInfo.title}</h3>
+              </div>
+              
+              <p className="text-sm text-gray-600 mb-3">
+                {helpInfo.description}
+              </p>
+              
+              {helpInfo.rules && helpInfo.rules.length > 0 && (
+                <div className="border-t border-gray-100 pt-3">
+                  <p className="text-xs font-medium text-gray-500 mb-2">状态规则：</p>
+                  <ul className="space-y-1.5">
+                    {helpInfo.rules.map((rule, index) => (
+                      <li key={index} className="text-xs text-gray-600 flex items-start">
+                        <span className="mr-1.5 text-gray-400">•</span>
+                        {rule}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              
+              {/* 小三角箭头 */}
+              <div className="absolute -top-1.5 right-3 w-3 h-3 bg-white border-l border-t border-gray-200 transform rotate-45" />
+            </div>
+          )}
         </div>
       </div>
       
