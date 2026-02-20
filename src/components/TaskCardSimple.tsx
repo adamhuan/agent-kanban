@@ -1,7 +1,7 @@
 'use client';
 
 import { Task } from '@/types';
-import { Clock, User, Tag, AlertCircle, CheckCircle } from 'lucide-react';
+import { Clock, User } from 'lucide-react';
 
 interface TaskCardProps {
   task: Task;
@@ -41,26 +41,6 @@ export default function TaskCardSimple({ task }: TaskCardProps) {
               style={{ width: `${task.progress}%` }}
             />
           </div>
-        </div>
-      )}
-      
-      {/* 标签 */}
-      {task.tags.length > 0 && (
-        <div className="flex flex-wrap gap-1 mb-3">
-          {task.tags.slice(0, 3).map(tag => (
-            <span 
-              key={tag}
-              className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-md flex items-center"
-            >
-              <Tag className="w-3 h-3 mr-1" />
-              {tag}
-            </span>
-          ))}
-          {task.tags.length > 3 && (
-            <span className="px-2 py-1 text-gray-400 text-xs">
-              +{task.tags.length - 3}
-            </span>
-          )}
         </div>
       )}
       
