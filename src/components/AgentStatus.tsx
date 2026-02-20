@@ -234,18 +234,12 @@ export default function AgentStatus({ agents }: AgentStatusProps) {
                             {agent.avatar || agent.name.charAt(0)}
                           </div>
                           
-                          {/* 名称和通道信息 */}
+                          {/* 名称和状态 */}
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center flex-wrap gap-2">
                               <h3 className="font-semibold text-gray-800 truncate">
                                 {agent.name.replace('龙虾机器人 🦞', '').trim() || '主会话'}
                               </h3>
-                              
-                              {/* 通道标签 */}
-                              <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-md flex items-center">
-                                <Hash className="w-3 h-3 mr-0.5" />
-                                {getChannelName(agent)}
-                              </span>
                               
                               {/* 状态标签 */}
                               <span className={`px-2 py-0.5 rounded-full text-xs font-medium border flex items-center ${statusColors[agent.status as keyof typeof statusColors]}`}>
