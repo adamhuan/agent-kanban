@@ -106,11 +106,24 @@ function cronJobsToTasks(cronJobsData) {
 // 从会话生成任务
 function sessionsToTasks(sessionsData) {
   const tasks = [];
+  const now = Date.now();
   
   Object.entries(sessionsData).forEach(([sessionKey, session]) => {
     if (sessionKey.includes('discord:') || sessionKey.includes('webchat')) {
       const channel = session.groupChannel || 'unknown';
-      const status = session.abortedLastRun ? 'done' : 'in_progress';
+      const lastActive = session.updatedAt || 0;
+      const timeSinceActive = now - lastActive;
+      
+      // 任务状态与 Agent 状态保持一致
+      let status = 'offline';  // 默认离线
+      if (session.abortedLastRun) {
+        status = 'done';
+      } else if (timeSinceActive < 5 * 60 * 1000) {
+        status = 'in_progress';  // 5分钟内活跃 = 进行中
+      } else if (timeSinceActive < 30 * 60 * 1000) {
+        status = 'in_progress';  // 5-30分钟仍显示进行中，但 Agent 会是 busy
+      }
+      // 30分钟以上 = offline
       
       tasks.push({
         id: `session-${session.sessionId}`,
@@ -120,7 +133,7 @@ function sessionsToTasks(sessionsData) {
         agentId: sessionKey,
         agentName: '龙虾机器人 🦞',
         priority: 'high',
-        progress: status === 'done' ? 100 : Math.floor(Math.random() * 40) + 50,
+        progress: status === 'done' ? 100 : (status === 'offline' ? 0 : Math.floor(Math.random() * 40) + 50),
         tags: ['discord', channel.replace('#', ''), session.model || 'unknown'],
         createdAt: new Date(session.updatedAt - 3600000).toISOString(),
         updatedAt: new Date(session.updatedAt).toISOString(),
