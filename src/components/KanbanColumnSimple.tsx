@@ -92,6 +92,8 @@ export default function KanbanColumnSimple({ column }: KanbanColumnProps) {
         return 'bg-blue-50/50 border-blue-200';
       case 'done':
         return 'bg-green-50/50 border-green-200';
+      case 'offline':
+        return 'bg-gray-100/50 border-gray-300';
       default:
         return 'bg-gray-50 border-gray-200';
     }
@@ -105,6 +107,8 @@ export default function KanbanColumnSimple({ column }: KanbanColumnProps) {
         return 'bg-blue-100 text-blue-800';
       case 'done':
         return 'bg-green-100 text-green-800';
+      case 'offline':
+        return 'bg-gray-200 text-gray-600';
       default:
         return 'bg-gray-100 text-gray-800';
     }

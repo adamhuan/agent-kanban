@@ -77,6 +77,11 @@ export default function Home() {
         title: '已完成',
         tasks: taskList.filter(task => task.status === 'done'),
       },
+      {
+        id: 'offline',
+        title: '已离线',
+        tasks: taskList.filter(task => task.status === 'offline'),
+      },
     ];
     setColumns(newColumns);
   };
@@ -256,11 +261,11 @@ export default function Home() {
           ) : (
             // 加载状态
             <>
-              {['todo', 'in_progress', 'done'].map((status) => (
+              {['todo', 'in_progress', 'done', 'offline'].map((status) => (
                 <div key={status} className="flex-1 min-w-[300px] rounded-lg border p-4 bg-gray-50">
                   <div className="flex justify-between items-center mb-4">
                     <h2 className="text-lg font-semibold text-gray-800">
-                      {status === 'todo' ? '待办' : status === 'in_progress' ? '进行中' : '已完成'}
+                      {status === 'todo' ? '待办' : status === 'in_progress' ? '进行中' : status === 'done' ? '已完成' : '已离线'}
                     </h2>
                     <span className="ml-2 px-2 py-1 rounded-full text-xs font-medium bg-gray-200">
                       0
